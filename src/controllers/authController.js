@@ -1,5 +1,27 @@
 import User from "../models/userModel.js";
 
+const signIn = async (req, res) => {
+  const { uid, email } = req.body;
+  const user = await User.findOne({
+    uid,
+    email,
+  });
+
+  if (user) {
+    return res.json({
+      statusCode: 200,
+      message: "User logged in!",
+      userDetails: {
+        fullname: user.fullname,
+        emailVerified: user.emailVerified,
+        profilePicUrl: user.profilePicUrl,
+      },
+    });
+  } else {
+    return res.json({ statusCode: 400, message: "User not found!" });
+  }
+};
+
 const signUp = async (req, res) => {
   const { uid, fullname, email } = req.body;
 
@@ -34,4 +56,4 @@ const checkForName = async (req, res) => {
   }
 };
 
-export { signUp, checkForName };
+export { signUp, signIn, checkForName };
