@@ -56,4 +56,16 @@ const saveFundraiser = async (req, res) => {
   }
 };
 
-export { saveFundraiser, getDraftFundraiser };
+const deleteFundraiserDraft = async (req, res) => {
+  const { uid, fundraiserId } = req.body;
+
+  const fundraiser = await Fundraiser.findByIdAndDelete({ uid, _id: fundraiserId });
+
+  if (fundraiser) {
+    return res.json({ statusCode: 200, message: "Draft fundraiser deleted!" });
+  } else {
+    return res.json({ statusCode: 404, message: "No draft fundraiser found!" });
+  }
+};
+
+export { saveFundraiser, deleteFundraiserDraft, getDraftFundraiser };
