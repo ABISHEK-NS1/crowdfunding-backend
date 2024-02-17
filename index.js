@@ -2,10 +2,11 @@ import cors from "cors";
 import express from "express";
 import "dotenv/config";
 
-import { checkForName, signIn, signUp } from "./src/controllers/authController.js";
+import { authenticate, checkForName, signIn, signUp } from "./src/controllers/authController.js";
 import { connectDb } from "./src/lib/db.js";
 import { createRouteHandler } from "uploadthing/express";
 import { uploadRouter } from "./src/uploadthing.js";
+import { saveFundraiser } from "./src/controllers/fundraiserController.js";
 
 connectDb();
 
@@ -29,6 +30,7 @@ app.get("/", (req, res) => {
 app.post("/api/auth/checkForName", checkForName);
 app.post("/api/auth/sign-up", signUp);
 app.post("/api/auth/sign-in", signIn);
+app.post("/api/saveFundraiser", authenticate, saveFundraiser);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

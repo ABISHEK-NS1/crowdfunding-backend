@@ -12,7 +12,7 @@ const FoundraiserSchema = new mongoose.Schema(
     },
     fundraiserCause: String,
     fundraiserGoal: Number,
-    amountRaised: Number,
+    amountRaised: { type: Number, default: 0 },
     coverMediaUrl: String,
     status: String,
   },
@@ -22,3 +22,5 @@ const FoundraiserSchema = new mongoose.Schema(
 );
 
 const Fundraiser = mongoose.model("Fundraiser", FoundraiserSchema);
+
+export default Fundraiser;
