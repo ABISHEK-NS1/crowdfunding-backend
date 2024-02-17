@@ -16,7 +16,7 @@ const getDraftFundraiser = async (req, res) => {
 };
 
 const saveFundraiser = async (req, res) => {
-  const { uid, fundraiserTitle, fundraiserStory, fundraiserFor, beneficiaryName, fundraiserCause, fundraiserGoal, coverMediaUrl, status } = req.body;
+  const { uid, creatorName, profilePicUrl, fundraiserTitle, fundraiserStory, fundraiserFor, beneficiaryName, fundraiserCause, fundraiserGoal, coverMediaUrl, status } = req.body;
 
   const fundraiser = await Fundraiser.findOne({
     uid,
@@ -27,6 +27,8 @@ const saveFundraiser = async (req, res) => {
   if (!fundraiserId) {
     const fundraiser = await Fundraiser.create({
       uid,
+      creatorName,
+      profilePicUrl,
       fundraiserTitle,
       fundraiserStory,
       fundraiserFor,
@@ -68,4 +70,9 @@ const deleteFundraiserDraft = async (req, res) => {
   }
 };
 
-export { saveFundraiser, deleteFundraiserDraft, getDraftFundraiser };
+const getAllFundraisers = async (req, res) => {
+  const allFundraisers = await Fundraiser.find({ status: "active" });
+  return res.json({ statusCode: 200, message: "All fundraisers found!", allFundraisers });
+};
+
+export { saveFundraiser, deleteFundraiserDraft, getDraftFundraiser, getAllFundraisers };

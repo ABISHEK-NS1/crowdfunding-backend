@@ -6,7 +6,7 @@ import { authenticate, checkForName, signIn, signUp } from "./src/controllers/au
 import { connectDb } from "./src/lib/db.js";
 import { createRouteHandler } from "uploadthing/express";
 import { uploadRouter } from "./src/uploadthing.js";
-import { deleteFundraiserDraft, getDraftFundraiser, saveFundraiser } from "./src/controllers/fundraiserController.js";
+import { deleteFundraiserDraft, getAllFundraisers, getDraftFundraiser, saveFundraiser } from "./src/controllers/fundraiserController.js";
 
 connectDb();
 
@@ -30,6 +30,7 @@ app.get("/", (req, res) => {
 app.post("/api/auth/checkForName", checkForName);
 app.post("/api/auth/sign-up", signUp);
 app.post("/api/auth/sign-in", signIn);
+app.post("/api/getAllFundraisers", getAllFundraisers);
 app.post("/api/getDraftFundraiser", authenticate, getDraftFundraiser);
 app.post("/api/saveFundraiser", authenticate, saveFundraiser);
 app.post("/api/deleteFundraiserDraft", authenticate, deleteFundraiserDraft);

@@ -3,6 +3,8 @@ import mongoose from "mongoose";
 const FoundraiserSchema = new mongoose.Schema(
   {
     uid: String,
+    creatorName: String,
+    profilePicUrl: String,
     fundraiserTitle: String,
     fundraiserStory: String,
     fundraiserFor: String,
