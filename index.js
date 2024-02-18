@@ -29,7 +29,6 @@ app.use(
     '/api/uploadthing',
     createRouteHandler({
         router: uploadRouter,
-        config: {},
     })
 );
 app.use(express.json());
