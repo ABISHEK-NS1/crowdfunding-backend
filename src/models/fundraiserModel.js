@@ -1,28 +1,31 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const FoundraiserSchema = new mongoose.Schema(
-  {
-    uid: String,
-    creatorName: String,
-    profilePicUrl: String,
-    fundraiserTitle: String,
-    fundraiserStory: String,
-    fundraiserFor: String,
-    beneficiaryName: {
-      type: String,
-      default: null,
+    {
+        uid: String,
+        creatorName: String,
+        profilePicUrl: String,
+        fundraiserTitle: String,
+        fundraiserStory: String,
+        fundraiserFor: String,
+        beneficiaryName: {
+            type: String,
+            default: null,
+        },
+        fundraiserCause: String,
+        fundraiserGoal: Number,
+        amountRaised: { type: Number, default: 0 },
+        coverMediaUrl: String,
+        status: String,
     },
-    fundraiserCause: String,
-    fundraiserGoal: Number,
-    amountRaised: { type: Number, default: 0 },
-    coverMediaUrl: String,
-    status: String,
-  },
-  {
-    timestamps: true,
-  }
+    {
+        timestamps: true,
+    }
 );
 
-const Fundraiser = mongoose.model("Fundraiser", FoundraiserSchema);
+const Fundraiser = mongoose.model(
+    'Fundraiser',
+    FoundraiserSchema
+);
 
 export default Fundraiser;

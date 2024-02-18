@@ -1,48 +1,32 @@
-import Fundraiser from "../models/fundraiserModel.js";
+import Fundraiser from '../models/fundraiserModel.js';
 
 const getDraftFundraiser = async (req, res) => {
-  const { uid } = req.body;
+    const { uid } = req.body;
 
-  const fundraiser = await Fundraiser.findOne({
-    uid,
-    status: { $in: ["draft", "review"] },
-  });
+    const fundraiser = await Fundraiser.findOne({
+        uid,
+        status: { $in: ['draft', 'review'] },
+    });
 
-  if (fundraiser) {
-    return res.json({ statusCode: 200, message: "Draft fundraiser found!", fundraiser });
-  } else {
-    return res.json({ statusCode: 404, message: "No draft fundraiser!" });
-  }
+    if (fundraiser) {
+        return res.json({
+            statusCode: 200,
+            message: 'Draft fundraiser found!',
+            fundraiser,
+        });
+    } else {
+        return res.json({
+            statusCode: 404,
+            message: 'No draft fundraiser!',
+        });
+    }
 };
 
 const saveFundraiser = async (req, res) => {
-  const { uid, creatorName, profilePicUrl, fundraiserTitle, fundraiserStory, fundraiserFor, beneficiaryName, fundraiserCause, fundraiserGoal, coverMediaUrl, status } = req.body;
-
-  const fundraiser = await Fundraiser.findOne({
-    uid,
-    status: { $in: ["draft", "review"] },
-  });
-  const fundraiserId = fundraiser?._id;
-
-  if (!fundraiserId) {
-    const fundraiser = await Fundraiser.create({
-      uid,
-      creatorName,
-      profilePicUrl,
-      fundraiserTitle,
-      fundraiserStory,
-      fundraiserFor,
-      beneficiaryName,
-      fundraiserCause,
-      fundraiserGoal,
-      coverMediaUrl,
-      status,
-    });
-    return res.json({ statusCode: 200, message: "Fundraiser saved!", fundraiser });
-  } else {
-    const fundraiser = await Fundraiser.findByIdAndUpdate(
-      fundraiserId,
-      {
+    const {
+        uid,
+        creatorName,
+        profilePicUrl,
         fundraiserTitle,
         fundraiserStory,
         fundraiserFor,
@@ -51,28 +35,91 @@ const saveFundraiser = async (req, res) => {
         fundraiserGoal,
         coverMediaUrl,
         status,
-      },
-      { new: true }
-    );
-    return res.json({ statusCode: 200, message: "Fundraiser updated!", fundraiser });
-  }
+    } = req.body;
+
+    const fundraiser = await Fundraiser.findOne({
+        uid,
+        status: { $in: ['draft', 'review'] },
+    });
+    const fundraiserId = fundraiser?._id;
+
+    if (!fundraiserId) {
+        const fundraiser = await Fundraiser.create({
+            uid,
+            creatorName,
+            profilePicUrl,
+            fundraiserTitle,
+            fundraiserStory,
+            fundraiserFor,
+            beneficiaryName,
+            fundraiserCause,
+            fundraiserGoal,
+            coverMediaUrl,
+            status,
+        });
+        return res.json({
+            statusCode: 200,
+            message: 'Fundraiser saved!',
+            fundraiser,
+        });
+    } else {
+        const fundraiser = await Fundraiser.findByIdAndUpdate(
+            fundraiserId,
+            {
+                fundraiserTitle,
+                fundraiserStory,
+                fundraiserFor,
+                beneficiaryName,
+                fundraiserCause,
+                fundraiserGoal,
+                coverMediaUrl,
+                status,
+            },
+            { new: true }
+        );
+        return res.json({
+            statusCode: 200,
+            message: 'Fundraiser updated!',
+            fundraiser,
+        });
+    }
 };
 
 const deleteFundraiserDraft = async (req, res) => {
-  const { uid, fundraiserId } = req.body;
+    const { uid, fundraiserId } = req.body;
 
-  const fundraiser = await Fundraiser.findByIdAndDelete({ uid, _id: fundraiserId });
+    const fundraiser = await Fundraiser.findByIdAndDelete({
+        uid,
+        _id: fundraiserId,
+    });
 
-  if (fundraiser) {
-    return res.json({ statusCode: 200, message: "Draft fundraiser deleted!" });
-  } else {
-    return res.json({ statusCode: 404, message: "No draft fundraiser found!" });
-  }
+    if (fundraiser) {
+        return res.json({
+            statusCode: 200,
+            message: 'Draft fundraiser deleted!',
+        });
+    } else {
+        return res.json({
+            statusCode: 404,
+            message: 'No draft fundraiser found!',
+        });
+    }
 };
 
 const getAllFundraisers = async (req, res) => {
-  const allFundraisers = await Fundraiser.find({ status: "active" });
-  return res.json({ statusCode: 200, message: "All fundraisers found!", allFundraisers });
+    const allFundraisers = await Fundraiser.find({
+        status: 'active',
+    });
+    return res.json({
+        statusCode: 200,
+        message: 'All fundraisers found!',
+        allFundraisers,
+    });
 };
 
-export { saveFundraiser, deleteFundraiserDraft, getDraftFundraiser, getAllFundraisers };
+export {
+    deleteFundraiserDraft,
+    getAllFundraisers,
+    getDraftFundraiser,
+    saveFundraiser,
+};
