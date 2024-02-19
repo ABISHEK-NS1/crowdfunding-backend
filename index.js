@@ -12,6 +12,7 @@ import {
     deleteFundraiserDraft,
     getAllFundraisers,
     getDraftFundraiser,
+    getUserFundraisers,
     saveFundraiser,
 } from './src/controllers/fundraiserController.js';
 import { connectDb } from './src/lib/db.js';
@@ -40,17 +41,26 @@ app.get('/', (req, res) => {
 app.post('/api/auth/checkForName', checkForName);
 app.post('/api/auth/sign-up', signUp);
 app.post('/api/auth/sign-in', signIn);
-app.post('/api/getAllFundraisers', getAllFundraisers);
 app.post(
-    '/api/getDraftFundraiser',
+    '/api/user/getDraftFundraiser',
     authenticate,
     getDraftFundraiser
 );
-app.post('/api/saveFundraiser', authenticate, saveFundraiser);
 app.post(
-    '/api/deleteFundraiserDraft',
+    '/api/user/deleteDraftFundraiser',
     authenticate,
     deleteFundraiserDraft
+);
+app.post(
+    '/api/user/getAllFundraisers',
+    authenticate,
+    getUserFundraisers
+);
+app.post('/api/fundraiser/getAllFundraisers', getAllFundraisers);
+app.post(
+    '/api/fundraiser/saveFundraiser',
+    authenticate,
+    saveFundraiser
 );
 
 app.listen(PORT, () => {

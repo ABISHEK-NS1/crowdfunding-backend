@@ -107,19 +107,56 @@ const deleteFundraiserDraft = async (req, res) => {
 };
 
 const getAllFundraisers = async (req, res) => {
-    const allFundraisers = await Fundraiser.find({
-        status: 'active',
-    });
-    return res.json({
-        statusCode: 200,
-        message: 'All fundraisers found!',
-        allFundraisers,
-    });
+    const allFundraisers = await Fundraiser.find(
+        {
+            status: 'active',
+        },
+        null,
+        { sort: { createdAt: -1 } }
+    );
+    if (allFundraisers) {
+        return res.json({
+            statusCode: 200,
+            message: 'All fundraisers found!',
+            allFundraisers,
+        });
+    } else {
+        return res.json({
+            statusCode: 404,
+            message: 'No fundraisers found!',
+        });
+    }
+};
+
+const getUserFundraisers = async (req, res) => {
+    const { uid } = req.body;
+
+    const userFundraisers = await Fundraiser.find(
+        {
+            uid,
+        },
+        null,
+        { sort: { createdAt: -1 } }
+    );
+
+    if (userFundraisers) {
+        return res.json({
+            statusCode: 200,
+            message: 'User fundraisers found!',
+            userFundraisers,
+        });
+    } else {
+        return res.json({
+            statusCode: 404,
+            message: 'No fundraisers found!',
+        });
+    }
 };
 
 export {
     deleteFundraiserDraft,
     getAllFundraisers,
     getDraftFundraiser,
+    getUserFundraisers,
     saveFundraiser,
 };
