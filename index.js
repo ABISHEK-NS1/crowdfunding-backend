@@ -3,7 +3,6 @@ import express from 'express';
 import { createRouteHandler } from 'uploadthing/express';
 
 import {
-    authenticate,
     checkForName,
     signIn,
     signUp,
@@ -15,8 +14,9 @@ import {
     getUserFundraisers,
     saveFundraiser,
 } from './src/controllers/fundraiserController.js';
-import { connectDb } from './src/lib/db.js';
-import { uploadRouter } from './src/uploadthing.js';
+import { connectDb } from './src/database/db.js';
+import { authenticate } from './src/middlewares/authenticate.js';
+import { uploadRouter } from './src/utils/uploadthing.js';
 
 import 'dotenv/config';
 

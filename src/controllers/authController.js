@@ -1,25 +1,4 @@
-import { supabase } from '../lib.js';
 import User from '../models/userModel.js';
-
-const authenticate = async (req, res, next) => {
-    const { access_token, uid } = req.body;
-    const {
-        data: { user },
-    } = await supabase.auth.getUser(access_token);
-
-    if (
-        user &&
-        user.role === 'authenticated' &&
-        user.id === uid
-    ) {
-        return next();
-    } else {
-        return res.json({
-            statusCode: 401,
-            message: 'Unathorized!',
-        });
-    }
-};
 
 const signIn = async (req, res) => {
     const { uid, email } = req.body;
@@ -91,5 +70,4 @@ const checkForName = async (req, res) => {
         });
     }
 };
-
-export { authenticate, checkForName, signIn, signUp };
+export { checkForName, signIn, signUp };
