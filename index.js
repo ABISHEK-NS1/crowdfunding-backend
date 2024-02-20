@@ -11,6 +11,7 @@ import {
     deleteFundraiserDraft,
     getAllFundraisers,
     getDraftFundraiser,
+    getFundraiserById,
     getUserFundraisers,
     saveFundraiser,
 } from './src/controllers/fundraiserController.js';
@@ -62,6 +63,7 @@ app.post(
     authenticate,
     saveFundraiser
 );
+app.post('/api/fundraiser/getFundraiserById', getFundraiserById);
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);

@@ -153,10 +153,31 @@ const getUserFundraisers = async (req, res) => {
     }
 };
 
+const getFundraiserById = async (req, res) => {
+    const { fundraiserId } = req.body;
+
+    const fundraiserDetails =
+        await Fundraiser.findById(fundraiserId);
+
+    if (fundraiserDetails) {
+        return res.json({
+            statusCode: 200,
+            message: 'Fundraiser found!',
+            fundraiserDetails,
+        });
+    } else {
+        return res.json({
+            statusCode: 404,
+            message: 'Fundraiser not found!',
+        });
+    }
+};
+
 export {
     deleteFundraiserDraft,
     getAllFundraisers,
     getDraftFundraiser,
+    getFundraiserById,
     getUserFundraisers,
     saveFundraiser,
 };
