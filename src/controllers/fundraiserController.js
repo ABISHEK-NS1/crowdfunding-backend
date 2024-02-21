@@ -168,9 +168,8 @@ const getFundraiserById = async (req, res) => {
     const { fundraiserId } = req.body;
 
     if (mongoose.isValidObjectId(fundraiserId)) {
-        const fundraiserDetails = await Fundraiser.findById({
-            fundraiserId,
-        });
+        const fundraiserDetails =
+            await Fundraiser.findById(fundraiserId);
 
         if (fundraiserDetails) {
             return res.json({
@@ -224,7 +223,26 @@ const deleteFundraiser = async (req, res) => {
 
     if (mongoose.isValidObjectId(fundraiserId)) {
         const fundraiserDelete =
-            await Fundraiser.findByIdAndDelete(fundraiserId);
+            await Fundraiser.findByIdAndUpdate(
+                fundraiserId,
+                {
+                    fundraiserTitle: '',
+                    fundraiserStory: '',
+                    fundraiserFor: '',
+                    beneficiaryName: '',
+                    creatorName: '',
+                    profilePicUrl: '',
+                    fundraiserCause: '',
+                    amountRaised: null,
+                    fundraiserGoal: null,
+                    fundraiserCity: '',
+                    fundraiserState: '',
+                    coverMediaUrl: '',
+                    zipCode: null,
+                    status: 'deleted',
+                },
+                { new: true }
+            );
         if (fundraiserDelete) {
             return res.json({
                 statusCode: 200,
