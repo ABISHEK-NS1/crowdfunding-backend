@@ -8,10 +8,12 @@ import {
     signUp,
 } from './src/controllers/authController.js';
 import {
+    deleteFundraiser,
     deleteFundraiserDraft,
     getAllFundraisers,
     getDraftFundraiser,
     getFundraiserById,
+    getUserFundraiserById,
     getUserFundraisers,
     saveFundraiser,
 } from './src/controllers/fundraiserController.js';
@@ -56,6 +58,16 @@ app.post(
     '/api/user/getAllFundraisers',
     authenticate,
     getUserFundraisers
+);
+app.post(
+    '/api/user/getUserFundraiserById',
+    authenticate,
+    getUserFundraiserById
+);
+app.post(
+    '/api/user/deleteFundraiser',
+    authenticate,
+    deleteFundraiser
 );
 app.post('/api/fundraiser/getAllFundraisers', getAllFundraisers);
 app.post(

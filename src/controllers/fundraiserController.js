@@ -1,3 +1,5 @@
+import mongoose from 'mongoose';
+
 import Fundraiser from '../models/fundraiserModel.js';
 
 const getDraftFundraiser = async (req, res) => {
@@ -165,28 +167,90 @@ const getUserFundraisers = async (req, res) => {
 const getFundraiserById = async (req, res) => {
     const { fundraiserId } = req.body;
 
-    const fundraiserDetails =
-        await Fundraiser.findById(fundraiserId);
-
-    if (fundraiserDetails) {
-        return res.json({
-            statusCode: 200,
-            message: 'Fundraiser found!',
-            fundraiserDetails,
+    if (mongoose.isValidObjectId(fundraiserId)) {
+        const fundraiserDetails = await Fundraiser.findById({
+            fundraiserId,
         });
+
+        if (fundraiserDetails) {
+            return res.json({
+                statusCode: 200,
+                message: 'Fundraiser found!',
+                fundraiserDetails,
+            });
+        } else {
+            return res.json({
+                statusCode: 404,
+                message: 'Fundraiser not found!',
+            });
+        }
     } else {
         return res.json({
-            statusCode: 404,
-            message: 'Fundraiser not found!',
+            statusCode: 400,
+            message: 'Invalid fundraiser id!',
+        });
+    }
+};
+
+const getUserFundraiserById = async (req, res) => {
+    const { fundraiserId } = req.body;
+
+    if (mongoose.isValidObjectId(fundraiserId)) {
+        const fundraiserDetails =
+            await Fundraiser.findById(fundraiserId);
+
+        if (fundraiserDetails) {
+            return res.json({
+                statusCode: 200,
+                message: 'Fundraiser found!',
+                fundraiserDetails,
+            });
+        } else {
+            return res.json({
+                statusCode: 404,
+                message: 'Fundraiser not found!',
+            });
+        }
+    } else {
+        return res.json({
+            statusCode: 400,
+            message: 'Invalid fundraiser id!',
+        });
+    }
+};
+
+const deleteFundraiser = async (req, res) => {
+    const { fundraiserId } = req.body;
+
+    if (mongoose.isValidObjectId(fundraiserId)) {
+        const fundraiserDelete =
+            await Fundraiser.findByIdAndDelete(fundraiserId);
+        if (fundraiserDelete) {
+            return res.json({
+                statusCode: 200,
+                message: 'Fundraiser deleted!',
+            });
+        } else {
+            return res.json({
+                statusCode: 404,
+                message: 'Fundraiser not found!',
+            });
+        }
+    } else {
+        return res.json({
+            statusCode: 400,
+            message: 'Invalid fundraiser id!',
         });
     }
 };
 
 export {
+    deleteFundraiser,
     deleteFundraiserDraft,
     getAllFundraisers,
     getDraftFundraiser,
     getFundraiserById,
+    getUserFundraiserById,
     getUserFundraisers,
     saveFundraiser,
 };
