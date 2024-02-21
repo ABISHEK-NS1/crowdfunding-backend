@@ -42,9 +42,12 @@ app.get('/', (req, res) => {
     res.send('Hello World!');
 });
 
+//AUTH ROUTES
 app.post('/api/auth/checkForName', checkForName);
 app.post('/api/auth/sign-up', signUp);
 app.post('/api/auth/sign-in', signIn);
+
+//USER ROUTES
 app.post(
     '/api/user/getDraftFundraiser',
     authenticate,
@@ -70,6 +73,8 @@ app.post(
     authenticate,
     deleteFundraiser
 );
+
+//FUNDRAISERS ROUTE
 app.post('/api/fundraiser/getAllFundraisers', getAllFundraisers);
 app.post(
     '/api/fundraiser/saveFundraiser',
