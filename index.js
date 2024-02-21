@@ -10,11 +10,14 @@ import {
 import {
     deleteFundraiser,
     deleteFundraiserDraft,
+    deleteFundraiserUpdate,
     getAllFundraisers,
     getDraftFundraiser,
     getFundraiserById,
+    getFundraiserUpdates,
     getUserFundraiserById,
     getUserFundraisers,
+    postFundraiserUpdate,
     saveFundraiser,
     updateFundraiser,
 } from './src/controllers/fundraiserController.js';
@@ -75,6 +78,21 @@ app.post(
 );
 
 //FUNDRAISERS ROUTE
+app.post(
+    '/api/fundraiser/getFundraiserUpdates',
+    authenticate,
+    getFundraiserUpdates
+);
+app.post(
+    '/api/fundraiser/postFundraiserUpdate',
+    authenticate,
+    postFundraiserUpdate
+);
+app.post(
+    '/api/fundraiser/deleteFundraiserUpdate',
+    authenticate,
+    deleteFundraiserUpdate
+);
 app.post('/api/fundraiser/getAllFundraisers', getAllFundraisers);
 app.post(
     '/api/fundraiser/saveFundraiser',

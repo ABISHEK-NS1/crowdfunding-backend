@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 
 import Fundraiser from '../models/fundraiserModel.js';
+import { FundraiserUpdates } from '../models/fundraiserUpdates.js';
 
 const getDraftFundraiser = async (req, res) => {
     const { uid } = req.body;
@@ -332,14 +333,146 @@ const deleteFundraiser = async (req, res) => {
     }
 };
 
+const getFundraiserUpdates = async (req, res) => {
+    const { fundraiserId } = req.body;
+
+    if (mongoose.isValidObjectId(fundraiserId)) {
+        const fundraiserUpdates = await FundraiserUpdates.find(
+            {
+                fundraiserId: fundraiserId,
+            },
+            null,
+            { sort: { createdAt: -1 } }
+        );
+
+        if (fundraiserUpdates) {
+            return res.json({
+                statusCode: 200,
+                message: 'Fundraiser updates found!',
+                fundraiserUpdates,
+            });
+        } else {
+            return res.json({
+                statusCode: 404,
+                message: 'No fundraiser updates found!',
+            });
+        }
+    } else {
+        return res.json({
+            statusCode: 400,
+            message: 'Invalid fundraiser id!',
+        });
+    }
+};
+
+const postFundraiserUpdate = async (req, res) => {
+    const { fundraiserId, uid, updateDetails } = req.body;
+
+    if (mongoose.isValidObjectId(fundraiserId)) {
+        const fundraiser =
+            await Fundraiser.findById(fundraiserId);
+
+        if (fundraiser.uid === uid) {
+            const fundraiserUpdate =
+                await FundraiserUpdates.create({
+                    uid,
+                    fundraiserId,
+                    updateDetails,
+                });
+            if (fundraiserUpdate) {
+                return res.json({
+                    statusCode: 200,
+                    message: 'Fundraiser update posted!',
+                    fundraiserUpdate,
+                });
+            } else {
+                return res.json({
+                    statusCode: 400,
+                    message: 'Fundraiser update not posted!',
+                });
+            }
+        } else {
+            return res.json({
+                statusCode: 400,
+                message: 'Forbidden access!',
+            });
+        }
+    } else {
+        return res.json({
+            statusCode: 400,
+            message: 'Invalid fundraiser id!',
+        });
+    }
+};
+
+const deleteFundraiserUpdate = async (req, res) => {
+    const { fundraiserId, updateId, uid } = req.body;
+
+    if (mongoose.isValidObjectId(fundraiserId)) {
+        if (mongoose.isValidObjectId(updateId)) {
+            const fundraiser =
+                await Fundraiser.findById(fundraiserId);
+            const update =
+                await FundraiserUpdates.findById(updateId);
+            if (fundraiser && update) {
+                if (
+                    fundraiser.uid === uid &&
+                    update.uid === uid
+                ) {
+                    const deleteUpdate =
+                        await FundraiserUpdates.findByIdAndDelete(
+                            updateId
+                        );
+                    if (deleteUpdate) {
+                        return res.json({
+                            statusCode: 200,
+                            message:
+                                'Fundraiser update deleted!',
+                        });
+                    } else {
+                        return res.json({
+                            statusCode: 400,
+                            message:
+                                'Fundraiser update not deleted!',
+                        });
+                    }
+                } else {
+                    return res.json({
+                        statusCode: 403,
+                        message: 'Forbidden access!',
+                    });
+                }
+            } else {
+                return res.json({
+                    statusCode: 400,
+                    message: 'Invalid id!',
+                });
+            }
+        } else {
+            return res.json({
+                statusCode: 400,
+                messages: 'Invalid id!',
+            });
+        }
+    } else {
+        return res.json({
+            statusCode: 400,
+            message: 'Invalid fundraiser id!',
+        });
+    }
+};
+
 export {
     deleteFundraiser,
     deleteFundraiserDraft,
+    deleteFundraiserUpdate,
     getAllFundraisers,
     getDraftFundraiser,
     getFundraiserById,
+    getFundraiserUpdates,
     getUserFundraiserById,
     getUserFundraisers,
+    postFundraiserUpdate,
     saveFundraiser,
     updateFundraiser,
 };
