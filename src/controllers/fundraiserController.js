@@ -301,7 +301,6 @@ const deleteFundraiser = async (req, res) => {
                             fundraiserGoal: null,
                             fundraiserCity: '',
                             fundraiserState: '',
-                            coverMediaUrl: '',
                             zipCode: null,
                             status: 'deleted',
                         },
