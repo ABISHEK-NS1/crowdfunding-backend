@@ -287,6 +287,10 @@ const deleteFundraiser = async (req, res) => {
             await Fundraiser.findById(fundraiserId);
         if (fundraiser) {
             if (fundraiser.uid === uid) {
+                const fundraiserUpdates =
+                    await FundraiserUpdates.deleteMany({
+                        fundraiserId: fundraiserId,
+                    });
                 const fundraiserDelete =
                     await Fundraiser.findByIdAndUpdate(
                         fundraiserId,
