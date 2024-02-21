@@ -33,7 +33,10 @@ const saveFundraiser = async (req, res) => {
         beneficiaryName,
         fundraiserCause,
         fundraiserGoal,
+        fundraiserCity,
+        fundraiserState,
         coverMediaUrl,
+        zipCode,
         status,
     } = req.body;
 
@@ -54,7 +57,10 @@ const saveFundraiser = async (req, res) => {
             beneficiaryName,
             fundraiserCause,
             fundraiserGoal,
+            fundraiserCity,
+            fundraiserState,
             coverMediaUrl,
+            zipCode,
             status,
         });
         return res.json({
@@ -72,7 +78,10 @@ const saveFundraiser = async (req, res) => {
                 beneficiaryName,
                 fundraiserCause,
                 fundraiserGoal,
+                fundraiserCity,
+                fundraiserState,
                 coverMediaUrl,
+                zipCode,
                 status,
             },
             { new: true }
