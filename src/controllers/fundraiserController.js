@@ -96,6 +96,59 @@ const saveFundraiser = async (req, res) => {
     }
 };
 
+const updateFundraiser = async (req, res) => {
+    const {
+        uid,
+        fundraiserId,
+        fundraiserTitle,
+        fundraiserStory,
+        fundraiserCause,
+        fundraiserGoal,
+        fundraiserCity,
+        fundraiserState,
+        coverMediaUrl,
+        zipCode,
+    } = req.body;
+
+    const findFundraiser =
+        await Fundraiser.findById(fundraiserId);
+
+    if (findFundraiser) {
+        if (findFundraiser.uid === uid) {
+            const fundraiser =
+                await Fundraiser.findByIdAndUpdate(
+                    fundraiserId,
+                    {
+                        fundraiserTitle,
+                        fundraiserStory,
+                        fundraiserCause,
+                        fundraiserGoal,
+                        fundraiserCity,
+                        fundraiserState,
+                        coverMediaUrl,
+                        zipCode,
+                    },
+                    { new: true }
+                );
+            return res.json({
+                statusCode: 200,
+                message: 'Fundraiser updated!',
+                fundraiser,
+            });
+        } else {
+            return res.json({
+                statusCode: 400,
+                message: 'Forbidden access!',
+            });
+        }
+    } else {
+        return res.json({
+            statusCode: 404,
+            message: 'Fundraiser not found!',
+        });
+    }
+};
+
 const deleteFundraiserDraft = async (req, res) => {
     const { uid, fundraiserId } = req.body;
 
@@ -192,22 +245,29 @@ const getFundraiserById = async (req, res) => {
 };
 
 const getUserFundraiserById = async (req, res) => {
-    const { fundraiserId } = req.body;
+    const { fundraiserId, uid } = req.body;
 
     if (mongoose.isValidObjectId(fundraiserId)) {
         const fundraiserDetails =
             await Fundraiser.findById(fundraiserId);
 
-        if (fundraiserDetails) {
-            return res.json({
-                statusCode: 200,
-                message: 'Fundraiser found!',
-                fundraiserDetails,
-            });
+        if (fundraiserDetails.uid === uid) {
+            if (fundraiserDetails) {
+                return res.json({
+                    statusCode: 200,
+                    message: 'Fundraiser found!',
+                    fundraiserDetails,
+                });
+            } else {
+                return res.json({
+                    statusCode: 404,
+                    message: 'Fundraiser not found!',
+                });
+            }
         } else {
             return res.json({
-                statusCode: 404,
-                message: 'Fundraiser not found!',
+                statusCode: 400,
+                message: 'Forbidden access!',
             });
         }
     } else {
@@ -219,35 +279,46 @@ const getUserFundraiserById = async (req, res) => {
 };
 
 const deleteFundraiser = async (req, res) => {
-    const { fundraiserId } = req.body;
+    const { fundraiserId, uid } = req.body;
 
     if (mongoose.isValidObjectId(fundraiserId)) {
-        const fundraiserDelete =
-            await Fundraiser.findByIdAndUpdate(
-                fundraiserId,
-                {
-                    fundraiserTitle: '',
-                    fundraiserStory: '',
-                    fundraiserFor: '',
-                    beneficiaryName: '',
-                    creatorName: '',
-                    profilePicUrl: '',
-                    fundraiserCause: '',
-                    amountRaised: null,
-                    fundraiserGoal: null,
-                    fundraiserCity: '',
-                    fundraiserState: '',
-                    coverMediaUrl: '',
-                    zipCode: null,
-                    status: 'deleted',
-                },
-                { new: true }
-            );
-        if (fundraiserDelete) {
-            return res.json({
-                statusCode: 200,
-                message: 'Fundraiser deleted!',
-            });
+        const fundraiser =
+            await Fundraiser.findById(fundraiserId);
+        if (fundraiser) {
+            if (fundraiser.uid === uid) {
+                const fundraiserDelete =
+                    await Fundraiser.findByIdAndUpdate(
+                        fundraiserId,
+                        {
+                            fundraiserTitle: '',
+                            fundraiserStory: '',
+                            fundraiserFor: '',
+                            beneficiaryName: '',
+                            creatorName: '',
+                            profilePicUrl: '',
+                            fundraiserCause: '',
+                            amountRaised: null,
+                            fundraiserGoal: null,
+                            fundraiserCity: '',
+                            fundraiserState: '',
+                            coverMediaUrl: '',
+                            zipCode: null,
+                            status: 'deleted',
+                        },
+                        { new: true }
+                    );
+                if (fundraiserDelete) {
+                    return res.json({
+                        statusCode: 200,
+                        message: 'Fundraiser deleted!',
+                    });
+                }
+            } else {
+                return res.json({
+                    statusCode: 400,
+                    message: 'Forbidden access!',
+                });
+            }
         } else {
             return res.json({
                 statusCode: 404,
@@ -271,4 +342,5 @@ export {
     getUserFundraiserById,
     getUserFundraisers,
     saveFundraiser,
+    updateFundraiser,
 };

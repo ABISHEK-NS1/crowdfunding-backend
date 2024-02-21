@@ -16,6 +16,7 @@ import {
     getUserFundraiserById,
     getUserFundraisers,
     saveFundraiser,
+    updateFundraiser,
 } from './src/controllers/fundraiserController.js';
 import { connectDb } from './src/database/db.js';
 import { authenticate } from './src/middlewares/authenticate.js';
@@ -74,6 +75,11 @@ app.post(
     '/api/fundraiser/saveFundraiser',
     authenticate,
     saveFundraiser
+);
+app.post(
+    '/api/fundraiser/updateFundraiser',
+    authenticate,
+    updateFundraiser
 );
 app.post('/api/fundraiser/getFundraiserById', getFundraiserById);
 
