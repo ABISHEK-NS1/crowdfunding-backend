@@ -21,6 +21,12 @@ import {
     saveFundraiser,
     updateFundraiser,
 } from './src/controllers/fundraiserController.js';
+import {
+    cancelPaymentIntent,
+    createConfirmIntent,
+    createPaymentIntent,
+} from './src/controllers/stripeController.js';
+import { saveDonation } from './src/controllers/userController.js';
 import { connectDb } from './src/database/db.js';
 import { authenticate } from './src/middlewares/authenticate.js';
 import { uploadRouter } from './src/utils/uploadthing.js';
@@ -39,6 +45,7 @@ app.use(
         router: uploadRouter,
     })
 );
+app.use(express.static('public'));
 app.use(express.json());
 
 app.get('/', (req, res) => {
@@ -51,6 +58,7 @@ app.post('/api/auth/sign-up', signUp);
 app.post('/api/auth/sign-in', signIn);
 
 //USER ROUTES
+app.post('/api/user/saveDonation', authenticate, saveDonation);
 app.post(
     '/api/user/getDraftFundraiser',
     authenticate,
@@ -104,6 +112,23 @@ app.post(
     updateFundraiser
 );
 app.post('/api/fundraiser/getFundraiserById', getFundraiserById);
+
+//STRIPE ROUTE
+app.post(
+    '/api/stripe/createPaymentIntent',
+    authenticate,
+    createPaymentIntent
+);
+app.post(
+    '/api/stripe/cancelPaymentIntent',
+    authenticate,
+    cancelPaymentIntent
+);
+app.post(
+    '/api/stripe/createConfirmIntent',
+    authenticate,
+    createConfirmIntent
+);
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
