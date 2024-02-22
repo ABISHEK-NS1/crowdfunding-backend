@@ -80,7 +80,6 @@ app.post(
 //FUNDRAISERS ROUTE
 app.post(
     '/api/fundraiser/getFundraiserUpdates',
-    authenticate,
     getFundraiserUpdates
 );
 app.post(
