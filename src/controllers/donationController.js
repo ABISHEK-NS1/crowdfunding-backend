@@ -25,6 +25,13 @@ const saveDonation = async (req, res) => {
         const fundraiser =
             await Fundraiser.findById(fundraiserId);
 
+        if (fundraiser.status !== 'active') {
+            return res.json({
+                statusCode: 400,
+                message: 'Fundraiser is not active',
+            });
+        }
+
         if (fundraiser) {
             fundraiser.amountRaised += Number(amount);
             await fundraiser.save();

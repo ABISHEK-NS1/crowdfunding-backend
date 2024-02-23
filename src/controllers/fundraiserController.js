@@ -114,6 +114,13 @@ const updateFundraiser = async (req, res) => {
     const findFundraiser =
         await Fundraiser.findById(fundraiserId);
 
+    if (findFundraiser.status !== 'active') {
+        return res.josn({
+            statusCode: 400,
+            message: 'Fundraiser is not active!',
+        });
+    }
+
     if (findFundraiser) {
         if (findFundraiser.uid === uid) {
             const fundraiser =
@@ -224,7 +231,12 @@ const getFundraiserById = async (req, res) => {
     if (mongoose.isValidObjectId(fundraiserId)) {
         const fundraiserDetails =
             await Fundraiser.findById(fundraiserId);
-
+        if (fundraiserDetails.status !== 'active') {
+            return res.json({
+                statusCode: 400,
+                message: 'Fundraiser is not active!',
+            });
+        }
         if (fundraiserDetails) {
             return res.json({
                 statusCode: 200,
@@ -251,7 +263,12 @@ const getUserFundraiserById = async (req, res) => {
     if (mongoose.isValidObjectId(fundraiserId)) {
         const fundraiserDetails =
             await Fundraiser.findById(fundraiserId);
-
+        if (fundraiserDetails.status !== 'active') {
+            return res.json({
+                statusCode: 400,
+                message: 'Fundraiser is not active!',
+            });
+        }
         if (fundraiserDetails.uid === uid) {
             if (fundraiserDetails) {
                 return res.json({
@@ -287,10 +304,9 @@ const deleteFundraiser = async (req, res) => {
             await Fundraiser.findById(fundraiserId);
         if (fundraiser) {
             if (fundraiser.uid === uid) {
-                const fundraiserUpdates =
-                    await FundraiserUpdates.deleteMany({
-                        fundraiserId: fundraiserId,
-                    });
+                await FundraiserUpdates.deleteMany({
+                    fundraiserId: fundraiserId,
+                });
                 const fundraiserDelete =
                     await Fundraiser.findByIdAndUpdate(
                         fundraiserId,
@@ -375,6 +391,13 @@ const postFundraiserUpdate = async (req, res) => {
     if (mongoose.isValidObjectId(fundraiserId)) {
         const fundraiser =
             await Fundraiser.findById(fundraiserId);
+
+        if (fundraiser.status !== 'active') {
+            return res.json({
+                statusCode: 400,
+                message: 'Fundraiser is not active!',
+            });
+        }
 
         if (fundraiser.uid === uid) {
             const fundraiserUpdate =
