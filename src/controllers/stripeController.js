@@ -93,8 +93,27 @@ const createConfirmIntent = async (req, res) => {
     }
 };
 
+const getPaymentDetailsById = async (req, res) => {
+    const { paymentId } = req.body;
+
+    const paymentIntent =
+        await stripe.paymentIntents.retrieve(paymentId);
+    if (paymentIntent) {
+        const paymentMethod =
+            await stripe.paymentMethods.retrieve(
+                paymentIntent.payment_method
+            );
+        return res.json({
+            statusCode: 200,
+            message: 'Payment method details!',
+            paymentIntent,
+        });
+    }
+};
+
 export {
     cancelPaymentIntent,
     createConfirmIntent,
     createPaymentIntent,
+    getPaymentDetailsById,
 };

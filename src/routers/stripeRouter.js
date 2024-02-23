@@ -4,6 +4,7 @@ import {
     cancelPaymentIntent,
     createConfirmIntent,
     createPaymentIntent,
+    getPaymentDetailsById,
 } from '../controllers/stripeController.js';
 import { authenticate } from '../middlewares/authenticate.js';
 
@@ -23,6 +24,11 @@ stripeRouter.post(
     '/api/stripe/createConfirmIntent',
     authenticate,
     createConfirmIntent
+);
+stripeRouter.post(
+    '/api/stripe/getPaymentDetailsById',
+    authenticate,
+    getPaymentDetailsById
 );
 
 export default stripeRouter;
