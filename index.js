@@ -8,6 +8,11 @@ import {
     signUp,
 } from './src/controllers/authController.js';
 import {
+    getFundraiserDonationsById,
+    getUserDonationsById,
+    saveDonation,
+} from './src/controllers/donationController.js';
+import {
     deleteFundraiser,
     deleteFundraiserDraft,
     deleteFundraiserUpdate,
@@ -26,7 +31,6 @@ import {
     createConfirmIntent,
     createPaymentIntent,
 } from './src/controllers/stripeController.js';
-import { saveDonation } from './src/controllers/userController.js';
 import { connectDb } from './src/database/db.js';
 import { authenticate } from './src/middlewares/authenticate.js';
 import { uploadRouter } from './src/utils/uploadthing.js';
@@ -58,7 +62,6 @@ app.post('/api/auth/sign-up', signUp);
 app.post('/api/auth/sign-in', signIn);
 
 //USER ROUTES
-app.post('/api/user/saveDonation', authenticate, saveDonation);
 app.post(
     '/api/user/getDraftFundraiser',
     authenticate,
@@ -112,6 +115,22 @@ app.post(
     updateFundraiser
 );
 app.post('/api/fundraiser/getFundraiserById', getFundraiserById);
+
+//DONATIONS ROUTE
+app.post(
+    '/api/donation/saveDonation',
+    authenticate,
+    saveDonation
+);
+app.post(
+    '/api/donation/getFundraiserDonationsById',
+    getFundraiserDonationsById
+);
+app.post(
+    '/api/donation/getUserDonationsById',
+    authenticate,
+    getUserDonationsById
+);
 
 //STRIPE ROUTE
 app.post(
