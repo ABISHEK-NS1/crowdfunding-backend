@@ -110,7 +110,7 @@ const getUserDonationsById = async (req, res) => {
                 )
                 .map((fundraiser) =>
                     fundraiser.status === 'deleted'
-                        ? `${fundraiser._id.toString()} (Not active)`
+                        ? `${fundraiser.fundraiserTitle} (Not active)`
                         : fundraiser.fundraiserTitle
                 )[0],
         }));
