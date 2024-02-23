@@ -311,18 +311,8 @@ const deleteFundraiser = async (req, res) => {
                     await Fundraiser.findByIdAndUpdate(
                         fundraiserId,
                         {
-                            fundraiserTitle: null,
-                            fundraiserStory: null,
-                            fundraiserFor: null,
-                            beneficiaryName: null,
                             creatorName: null,
                             profilePicUrl: null,
-                            fundraiserCause: null,
-                            amountRaised: null,
-                            fundraiserGoal: null,
-                            fundraiserCity: null,
-                            fundraiserState: null,
-                            zipCode: null,
                             status: 'deleted',
                         },
                         { new: true }
