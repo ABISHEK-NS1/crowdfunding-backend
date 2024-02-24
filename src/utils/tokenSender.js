@@ -7,7 +7,8 @@ import { baseurl } from './lib.js';
 
 import 'dotenv/config';
 
-export const sendVerificationMail = (sendTo, uid) => {
+const sendVerificationMail = async (sendTo, uid) => {
+    console.log(sendTo, uid);
     const transporter = nodemailer.createTransport({
         host: 'mail.mail.ee',
         port: 465,
@@ -33,49 +34,58 @@ export const sendVerificationMail = (sendTo, uid) => {
         text: `Hi! There, You have recently created an account or asked for verification mail on our website.\n\nPlease follow the given link to verify your email\n\n${baseurl}/user/verify?token=${token}\n\nThe link will expire in 30 minutes\n\nThank You!`,
     };
 
-    const checkBeforeSending = async (uid, sendTo) => {
-        const verificationData = await UserVerification.findOne({
-            uid,
-            email: sendTo,
-        });
+    const verificationData = await UserVerification.findOne({
+        uid,
+        email: sendTo,
+    });
 
-        if (!verificationData) {
-            const verification = await UserVerification.create({
-                uid,
-                email: sendTo,
-            });
-            if (verification) {
-                transporter.sendMail(
-                    mailConfigurations,
-                    function (error, info) {
-                        if (error) {
-                            console.log(error);
-                        }
-                    }
-                );
-                return 'sent';
-            }
-        } else if (
-            Math.floor(
-                (new Date() -
-                    new Date(verificationData.updatedAt)) /
-                    60000
-            ) > 2
-        ) {
-            verificationData.updatedAt = new Date();
-            await verificationData.save();
+    if (!verificationData) {
+        const mailSent = await new Promise((resolve, reject) => {
             transporter.sendMail(
                 mailConfigurations,
                 function (error, info) {
                     if (error) {
                         console.log(error);
+                        reject(error);
+                    } else {
+                        resolve(info);
                     }
                 }
             );
+        });
+
+        if (mailSent) {
+            await UserVerification.create({
+                uid,
+                email: sendTo,
+            });
             return 'sent';
-        } else {
-            return 'cooldown';
         }
-    };
-    return checkBeforeSending(uid, sendTo);
+    } else if (
+        Math.floor(
+            (new Date() - new Date(verificationData.updatedAt)) /
+                60000
+        ) > 2
+    ) {
+        verificationData.updatedAt = new Date();
+        await verificationData.save();
+        await new Promise((resolve, reject) => {
+            transporter.sendMail(
+                mailConfigurations,
+                function (error, info) {
+                    if (error) {
+                        console.log(error);
+                        reject(error);
+                    } else {
+                        resolve(info);
+                    }
+                }
+            );
+        });
+        return 'sent';
+    } else {
+        return 'cooldown';
+    }
 };
+
+export default sendVerificationMail;

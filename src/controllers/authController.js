@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 
 import User from '../models/userModel.js';
 import { UserVerification } from '../models/verificationModal.js';
-import { sendVerificationMail } from '../utils/tokenSender.js';
+import sendVerificationMail from '../utils/tokenSender.js';
 
 import 'dotenv/config';
 
