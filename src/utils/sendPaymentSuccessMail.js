@@ -23,7 +23,7 @@ export const sendPaymentSuccessMail = (
         from: process.env.OFFICIAL_MAIL,
         to: sendTo,
         subject: 'Donation Successful',
-        text: `Hello ${fullname}, Thank you for your generous donation\n\nAmount: ₹${amount}\nFundraiser: http://localhost:5173/fundraiser/${fundraiserId}\nPayment ID: ${paymentId}.\n\nThis is a payment confirmation mail for your donation. Do not reply.`,
+        text: `Hello ${fullname}, Thank you for your generous donation\n\nAmount: ₹${amount}\nFundraiser: https://sahyogweb.vercel.app/fundraiser/${fundraiserId}\nPayment ID: ${paymentId}.\n\nThis is a payment confirmation mail for your donation. Do not reply.`,
     };
 
     transporter.sendMail(
