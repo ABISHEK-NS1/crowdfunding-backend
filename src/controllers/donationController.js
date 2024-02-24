@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 import { FundraiserDonations } from '../models/fundraiserDonationsModal.js';
 import Fundraiser from '../models/fundraiserModel.js';
 import User from '../models/userModel.js';
-import { sendPaymentSuccessMail } from '../utils/sendPaymentSuccessMail.js';
+import sendPaymentSuccessMail from '../utils/sendPaymentSuccessMail.js';
 
 const saveDonation = async (req, res) => {
     const {
@@ -51,18 +51,20 @@ const saveDonation = async (req, res) => {
         });
 
         if (donation) {
-            sendPaymentSuccessMail(
+            const sentStatus = await sendPaymentSuccessMail(
                 user.email,
                 fullname,
                 paymentId,
                 fundraiserId,
                 amount
             );
-            return res.json({
-                statusCode: 200,
-                message: 'Donation saved successfully',
-                donation,
-            });
+            if (sentStatus === 'sent') {
+                return res.json({
+                    statusCode: 200,
+                    message: 'Donation saved successfully',
+                    donation,
+                });
+            }
         } else {
             return res.json({
                 statusCode: 400,

@@ -2,7 +2,7 @@ import nodemailer from 'nodemailer';
 
 import 'dotenv/config';
 
-export const sendPaymentSuccessMail = async (
+const sendPaymentSuccessMail = async (
     sendTo,
     fullname,
     paymentId,
@@ -26,7 +26,7 @@ export const sendPaymentSuccessMail = async (
         text: `Hello ${fullname}, Thank you for your generous donation\n\nAmount: ₹${amount}\nFundraiser: https://sahyogweb.vercel.app/fundraiser/${fundraiserId}\nPayment ID: ${paymentId}.\n\nThis is a payment confirmation mail for your donation. Do not reply.`,
     };
 
-    await new Promise((resolve, reject) => {
+    const mailSent = await new Promise((resolve, reject) => {
         transporter.sendMail(
             mailConfigurations,
             function (error, info) {
@@ -39,4 +39,12 @@ export const sendPaymentSuccessMail = async (
             }
         );
     });
+
+    if (mailSent) {
+        return 'sent';
+    } else {
+        return 'failed';
+    }
 };
+
+export default sendPaymentSuccessMail;

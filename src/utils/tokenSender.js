@@ -8,7 +8,6 @@ import { baseurl } from './lib.js';
 import 'dotenv/config';
 
 const sendVerificationMail = async (sendTo, uid) => {
-    console.log(sendTo, uid);
     const transporter = nodemailer.createTransport({
         host: 'mail.mail.ee',
         port: 465,
