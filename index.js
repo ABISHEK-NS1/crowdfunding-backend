@@ -18,14 +18,18 @@ const app = express();
 const PORT = 5172;
 
 app.use(cors());
+app.use(express.static('public'));
+app.use(express.json());
 app.use(
     '/api/uploadthing',
     createRouteHandler({
         router: uploadRouter,
+        config: {
+            uploadthingSecret: process.env.UPLOADTHING_SECRET,
+            uploadthingId: process.env.UPLOADTHING_APP_ID,
+        },
     })
 );
-app.use(express.static('public'));
-app.use(express.json());
 
 app.get('/', (req, res) => {
     res.send('Hello World!');
