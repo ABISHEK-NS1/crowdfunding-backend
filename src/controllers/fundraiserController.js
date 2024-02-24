@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 import Fundraiser from '../models/fundraiserModel.js';
-import { FundraiserUpdates } from '../models/fundraiserUpdates.js';
+import { FundraiserUpdates } from '../models/fundraiserUpdatesModal.js';
 
 const getDraftFundraiser = async (req, res) => {
     const { uid } = req.body;

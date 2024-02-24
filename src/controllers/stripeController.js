@@ -99,10 +99,10 @@ const getPaymentDetailsById = async (req, res) => {
     const paymentIntent =
         await stripe.paymentIntents.retrieve(paymentId);
     if (paymentIntent) {
-        const paymentMethod =
-            await stripe.paymentMethods.retrieve(
-                paymentIntent.payment_method
-            );
+        await stripe.paymentMethods.retrieve(
+            paymentIntent.payment_method
+        );
+
         return res.json({
             statusCode: 200,
             message: 'Payment method details!',

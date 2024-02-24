@@ -4,6 +4,10 @@ import { createClient } from '@supabase/supabase-js';
 
 import 'dotenv/config';
 
+const baseurl = process.env.NODE_ENV
+    ? 'https://sahyog-backend.vercel.app'
+    : 'http://localhost:5172';
+
 function encryptValue(val) {
     return CryptoJS.AES.encrypt(
         val,
@@ -30,4 +34,4 @@ const supabase = createClient(
     }
 );
 
-export { decryptValue, encryptValue, supabase };
+export { baseurl, decryptValue, encryptValue, supabase };

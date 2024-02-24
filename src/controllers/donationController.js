@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-import { FundraiserDonations } from '../models/fundraiserDonations.js';
+import { FundraiserDonations } from '../models/fundraiserDonationsModal.js';
 import Fundraiser from '../models/fundraiserModel.js';
 
 const saveDonation = async (req, res) => {
