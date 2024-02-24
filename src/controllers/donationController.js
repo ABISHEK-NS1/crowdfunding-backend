@@ -51,6 +51,13 @@ const saveDonation = async (req, res) => {
         });
 
         if (donation) {
+            sendPaymentSuccessMail(
+                user.email,
+                fullname,
+                paymentId,
+                fundraiserId,
+                amount
+            );
             return res.json({
                 statusCode: 200,
                 message: 'Donation saved successfully',

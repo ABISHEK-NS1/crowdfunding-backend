@@ -1,13 +1,14 @@
-import jwt from 'jsonwebtoken';
 import nodemailer from 'nodemailer';
-
-import { UserVerification } from '../models/verificationModal.js';
-
-import { baseurl } from './lib.js';
 
 import 'dotenv/config';
 
-export const sendPaymentSuccessMail = (sendTo, uid) => {
+export const sendPaymentSuccessMail = (
+    sendTo,
+    fullname,
+    paymentId,
+    fundraiserId,
+    amount
+) => {
     const transporter = nodemailer.createTransport({
         host: 'mail.mail.ee',
         port: 465,
@@ -18,64 +19,19 @@ export const sendPaymentSuccessMail = (sendTo, uid) => {
         },
     });
 
-    const token = jwt.sign(
-        {
-            data: { email: sendTo, uid: uid },
-        },
-        process.env.JWT_SECRET_KEY,
-        { expiresIn: '30m' }
-    );
-
     const mailConfigurations = {
         from: process.env.OFFICIAL_MAIL,
         to: sendTo,
-        subject: 'Email Verification',
-        text: `Hi! There, You have recently created an account or asked for verification mail on our website.\n\nPlease follow the given link to verify your email\n\n${baseurl}/user/verify?token=${token}\n\nThe link will expire in 30 minutes\n\nThank You!`,
+        subject: 'Donation Successful',
+        text: `Hello ${fullname}, Thank you for your generous donation\n\nAmount: ₹${amount}\nFundraiser: http://localhost:5173/fundraiser/${fundraiserId}\nPayment ID: ${paymentId}.\n\nThis is a payment confirmation mail for your donation. Do not reply.`,
     };
 
-    const checkBeforeSending = async (uid, sendTo) => {
-        const verificationData = await UserVerification.findOne({
-            uid,
-            email: sendTo,
-        });
-
-        if (!verificationData) {
-            const verification = await UserVerification.create({
-                uid,
-                email: sendTo,
-            });
-            if (verification) {
-                transporter.sendMail(
-                    mailConfigurations,
-                    function (error, info) {
-                        if (error) {
-                            console.log(error);
-                        }
-                    }
-                );
-                return 'sent';
+    transporter.sendMail(
+        mailConfigurations,
+        function (error, info) {
+            if (error) {
+                console.log(error);
             }
-        } else if (
-            Math.floor(
-                (new Date() -
-                    new Date(verificationData.updatedAt)) /
-                    60000
-            ) > 2
-        ) {
-            verificationData.updatedAt = new Date();
-            await verificationData.save();
-            transporter.sendMail(
-                mailConfigurations,
-                function (error, info) {
-                    if (error) {
-                        console.log(error);
-                    }
-                }
-            );
-            return 'sent';
-        } else {
-            return 'cooldown';
         }
-    };
-    return checkBeforeSending(uid, sendTo);
+    );
 };
