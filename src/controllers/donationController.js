@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import { FundraiserDonations } from '../models/fundraiserDonationsModal.js';
 import Fundraiser from '../models/fundraiserModel.js';
 import User from '../models/userModel.js';
+import { sendPaymentSuccessMail } from '../utils/sendPaymentSuccessMail.js';
 
 const saveDonation = async (req, res) => {
     const {
@@ -25,14 +26,6 @@ const saveDonation = async (req, res) => {
     }
 
     if (mongoose.isValidObjectId(fundraiserId)) {
-        const donation = await FundraiserDonations.create({
-            uid,
-            fullname,
-            fundraiserId,
-            paymentId,
-            donationAmount: amount,
-            anonymousDonation: anonymous,
-        });
         const fundraiser =
             await Fundraiser.findById(fundraiserId);
 
@@ -47,6 +40,15 @@ const saveDonation = async (req, res) => {
             fundraiser.amountRaised += Number(amount);
             await fundraiser.save();
         }
+
+        const donation = await FundraiserDonations.create({
+            uid,
+            fullname,
+            fundraiserId,
+            paymentId,
+            donationAmount: amount,
+            anonymousDonation: anonymous,
+        });
 
         if (donation) {
             return res.json({
