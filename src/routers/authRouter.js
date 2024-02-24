@@ -19,6 +19,6 @@ authRouter.post(
     authenticate,
     resendVerificationMail
 );
-authRouter.get('/user/verify/:token', verifyEmail);
+authRouter.get('/user/verify', verifyEmail);
 
 export default authRouter;

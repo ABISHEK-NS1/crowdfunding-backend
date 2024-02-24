@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken';
 
 import User from '../models/userModel.js';
+import { UserVerification } from '../models/verificationModal.js';
 import { sendVerificationMail } from '../utils/tokenSender.js';
 
 import 'dotenv/config';
@@ -40,12 +41,14 @@ const signUp = async (req, res) => {
     });
 
     if (user) {
-        sendVerificationMail(email, uid);
+        await sendVerificationMail(email, uid);
+
         return res.json({
             statusCode: 200,
             message: 'User created!',
             userDetails: {
                 emailVerified: false,
+                fullname: fullname,
                 profilePicUrl: user.profilePicUrl,
             },
         });
@@ -79,15 +82,48 @@ const checkForName = async (req, res) => {
 
 const resendVerificationMail = async (req, res) => {
     const { email, uid } = req.body;
-    sendVerificationMail(email, uid);
-    return res.json({
-        statusCode: 200,
-        message: 'Verification mail sent!',
+
+    const user = await User.findOne({
+        uid,
+        email,
     });
+
+    if (user) {
+        if (!user.emailVerified) {
+            const sentStatus = await sendVerificationMail(
+                email,
+                uid
+            );
+
+            if (sentStatus === 'sent') {
+                return res.json({
+                    statusCode: 200,
+                    message: 'Verification mail sent!',
+                });
+            } else {
+                return res.json({
+                    statusCode: 400,
+                    message:
+                        'Email already sent, please wait for 2 minutes!',
+                });
+            }
+        } else {
+            return res.json({
+                statusCode: 400,
+                message: 'Email already verified!',
+            });
+        }
+    } else {
+        return res.json({
+            statusCode: 400,
+            message: 'User not found!',
+        });
+    }
 };
 
 const verifyEmail = async (req, res) => {
-    const { token } = req.params;
+    const { token } = req.query;
+
     jwt.verify(
         token,
         process.env.JWT_SECRET_KEY,
@@ -103,6 +139,12 @@ const verifyEmail = async (req, res) => {
                     uid,
                     email,
                 });
+
+                await UserVerification.findOneAndDelete({
+                    uid,
+                    email,
+                });
+
                 if (user) {
                     if (user.emailVerified) {
                         return res.send(
