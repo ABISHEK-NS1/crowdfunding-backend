@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 
 import { FundraiserDonations } from '../models/fundraiserDonationsModal.js';
 import Fundraiser from '../models/fundraiserModel.js';
+import User from '../models/userModel.js';
 
 const saveDonation = async (req, res) => {
     const {
@@ -24,6 +25,16 @@ const saveDonation = async (req, res) => {
         });
         const fundraiser =
             await Fundraiser.findById(fundraiserId);
+
+        const user = await User.findOne({ uid });
+
+        if (!user.emailVerified) {
+            return res.json({
+                statusCode: 400,
+                message:
+                    'Please verify your email before making a donation',
+            });
+        }
 
         if (fundraiser.status !== 'active') {
             return res.json({

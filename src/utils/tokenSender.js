@@ -3,7 +3,7 @@ import nodemailer from 'nodemailer';
 
 import { UserVerification } from '../models/verificationModal.js';
 
-import { baseurl, timeSince } from './lib.js';
+import { baseurl } from './lib.js';
 
 import 'dotenv/config';
 

@@ -1,5 +1,7 @@
 import Stripe from 'stripe';
 
+import User from '../models/userModel.js';
+
 import 'dotenv/config';
 
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
@@ -68,6 +70,15 @@ const createConfirmIntent = async (req, res) => {
             email,
         });
     }
+
+    const user = await User.findOne({ email });
+
+    if (!user.emailVerified) {
+        return res.json({
+            error: 'Please verify your email before making a donation',
+        });
+    }
+
     try {
         const intent = await stripe.paymentIntents.create({
             confirm: true,
@@ -82,12 +93,12 @@ const createConfirmIntent = async (req, res) => {
             customer: customer.id,
         });
 
-        res.json({
+        return res.json({
             client_secret: intent.client_secret,
             status: intent.status,
         });
     } catch (err) {
-        res.json({
+        return res.json({
             error: err,
         });
     }

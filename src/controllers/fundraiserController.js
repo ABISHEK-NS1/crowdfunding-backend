@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 
 import Fundraiser from '../models/fundraiserModel.js';
 import { FundraiserUpdates } from '../models/fundraiserUpdatesModal.js';
+import User from '../models/userModel.js';
 
 const getDraftFundraiser = async (req, res) => {
     const { uid } = req.body;
@@ -48,6 +49,15 @@ const saveFundraiser = async (req, res) => {
         status: { $in: ['draft', 'review'] },
     });
     const fundraiserId = fundraiser?._id;
+
+    const user = await User.findOne({ uid });
+
+    if (!user.emailVerified) {
+        return res.json({
+            statusCode: 400,
+            message: 'Please verify your email!',
+        });
+    }
 
     if (!fundraiserId) {
         const fundraiser = await Fundraiser.create({
@@ -111,48 +121,63 @@ const updateFundraiser = async (req, res) => {
         zipCode,
     } = req.body;
 
-    const findFundraiser =
-        await Fundraiser.findById(fundraiserId);
+    const user = await User.findOne({ uid });
 
-    if (findFundraiser.status !== 'active') {
-        return res.josn({
+    if (!user.emailVerified) {
+        return res.json({
             statusCode: 400,
-            message: 'Fundraiser is not active!',
+            message: 'Please verify your email!',
         });
     }
+    if (mongoose.isValidObjectId(fundraiserId)) {
+        const findFundraiser =
+            await Fundraiser.findById(fundraiserId);
 
-    if (findFundraiser) {
-        if (findFundraiser.uid === uid) {
-            const fundraiser =
-                await Fundraiser.findByIdAndUpdate(
-                    fundraiserId,
-                    {
-                        fundraiserTitle,
-                        fundraiserStory,
-                        fundraiserCause,
-                        fundraiserGoal,
-                        fundraiserCity,
-                        fundraiserState,
-                        coverMediaUrl,
-                        zipCode,
-                    },
-                    { new: true }
-                );
-            return res.json({
-                statusCode: 200,
-                message: 'Fundraiser updated!',
-                fundraiser,
+        if (findFundraiser.status !== 'active') {
+            return res.josn({
+                statusCode: 400,
+                message: 'Fundraiser is not active!',
             });
+        }
+
+        if (findFundraiser) {
+            if (findFundraiser.uid === uid) {
+                const fundraiser =
+                    await Fundraiser.findByIdAndUpdate(
+                        fundraiserId,
+                        {
+                            fundraiserTitle,
+                            fundraiserStory,
+                            fundraiserCause,
+                            fundraiserGoal,
+                            fundraiserCity,
+                            fundraiserState,
+                            coverMediaUrl,
+                            zipCode,
+                        },
+                        { new: true }
+                    );
+                return res.json({
+                    statusCode: 200,
+                    message: 'Fundraiser updated!',
+                    fundraiser,
+                });
+            } else {
+                return res.json({
+                    statusCode: 400,
+                    message: 'Forbidden access!',
+                });
+            }
         } else {
             return res.json({
-                statusCode: 400,
-                message: 'Forbidden access!',
+                statusCode: 404,
+                message: 'Fundraiser not found!',
             });
         }
     } else {
         return res.json({
-            statusCode: 404,
-            message: 'Fundraiser not found!',
+            statusCode: 400,
+            message: 'Invalid fundraiser id!',
         });
     }
 };
@@ -160,20 +185,27 @@ const updateFundraiser = async (req, res) => {
 const deleteFundraiserDraft = async (req, res) => {
     const { uid, fundraiserId } = req.body;
 
-    const fundraiser = await Fundraiser.findByIdAndDelete({
-        uid,
-        _id: fundraiserId,
-    });
-
-    if (fundraiser) {
-        return res.json({
-            statusCode: 200,
-            message: 'Draft fundraiser deleted!',
+    if (mongoose.isValidObjectId(fundraiserId)) {
+        const fundraiser = await Fundraiser.findByIdAndDelete({
+            uid,
+            _id: fundraiserId,
         });
+
+        if (fundraiser) {
+            return res.json({
+                statusCode: 200,
+                message: 'Draft fundraiser deleted!',
+            });
+        } else {
+            return res.json({
+                statusCode: 404,
+                message: 'No draft fundraiser found!',
+            });
+        }
     } else {
         return res.json({
-            statusCode: 404,
-            message: 'No draft fundraiser found!',
+            statusCode: 400,
+            message: 'Invalid fundraiser id!',
         });
     }
 };
@@ -377,6 +409,15 @@ const getFundraiserUpdates = async (req, res) => {
 
 const postFundraiserUpdate = async (req, res) => {
     const { fundraiserId, uid, updateDetails } = req.body;
+
+    const user = await User.findOne({ uid });
+
+    if (!user.emailVerified) {
+        return res.json({
+            statusCode: 400,
+            message: 'Please verify your email!',
+        });
+    }
 
     if (mongoose.isValidObjectId(fundraiserId)) {
         const fundraiser =
