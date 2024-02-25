@@ -10,5 +10,5 @@ export const uploadRouter = {
             maxFileSize: '4MB',
             maxFileCount: 1,
         },
-    }),
+    }).onUploadComplete((data) => {}),
 };
