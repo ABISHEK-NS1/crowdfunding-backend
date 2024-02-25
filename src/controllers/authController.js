@@ -60,26 +60,6 @@ const signUp = async (req, res) => {
     }
 };
 
-const checkForName = async (req, res) => {
-    const { fullname } = req.body;
-
-    const user = await User.find({
-        fullname,
-    });
-
-    if (user.length > 0) {
-        return res.json({
-            statusCode: 200,
-            message: 'User found!',
-        });
-    } else {
-        return res.json({
-            statusCode: 404,
-            message: 'User not found!',
-        });
-    }
-};
-
 const resendVerificationMail = async (req, res) => {
     const { email, uid } = req.body;
 
@@ -167,10 +147,4 @@ const verifyEmail = async (req, res) => {
     );
 };
 
-export {
-    checkForName,
-    resendVerificationMail,
-    signIn,
-    signUp,
-    verifyEmail,
-};
+export { resendVerificationMail, signIn, signUp, verifyEmail };
