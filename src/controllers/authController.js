@@ -158,7 +158,9 @@ const verifyEmail = async (req, res) => {
                         );
                     }
                 } else {
-                    return res.send('No user found');
+                    return res.send(
+                        'No user is associated with this email!'
+                    );
                 }
             }
         }

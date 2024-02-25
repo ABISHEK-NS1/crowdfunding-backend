@@ -58,6 +58,7 @@ const saveDonation = async (req, res) => {
                 fundraiserId,
                 amount
             );
+
             if (sentStatus === 'sent') {
                 return res.json({
                     statusCode: 200,
