@@ -23,7 +23,7 @@ const sendPaymentSuccessMail = async (
         from: process.env.OFFICIAL_MAIL,
         to: sendTo,
         subject: 'Donation Successful',
-        text: `Hello ${fullname}, Thank you for your generous donation\n\nAmount: ₹${amount}\nFundraiser: https://sahyogweb.vercel.app/fundraiser/${fundraiserId}\nPayment ID: ${paymentId}.\n\nThis is a payment confirmation mail for your donation. Do not reply.`,
+        html: `Hello ${fullname}, Thank you for your generous donation<br/><br/>Amount: ₹${amount}<br/>Fundraiser: <a href="https://sahyogweb.vercel.app/fundraiser/${fundraiserId}" target="_blank">View Details</a><br/>Payment ID: ${paymentId}.<br/><br/>This is a payment confirmation mail for your donation. Do not reply.`,
     };
 
     const mailSent = await new Promise((resolve, reject) => {

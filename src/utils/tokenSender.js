@@ -30,7 +30,7 @@ const sendVerificationMail = async (sendTo, uid) => {
         from: process.env.OFFICIAL_MAIL,
         to: sendTo,
         subject: 'Email Verification',
-        text: `Hi! There, You have recently created an account or asked for verification mail on our website.\n\nPlease follow the given link to verify your email\n\n${baseurl}/user/verify?token=${token}\n\nThe link will expire in 30 minutes\n\nThank You!`,
+        html: `Hi! There, You have recently created an account or asked for verification mail on our website.<br/><br/>Please follow the given link to verify your email<br/><br/><a href="${baseurl}/user/verify?token=${token}" target="_blank">Verify Email</a><br/><br/>The link will expire in 30 minutes<br/><br/>Thank You!`,
     };
 
     const verificationData = await UserVerification.findOne({
