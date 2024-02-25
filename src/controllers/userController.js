@@ -1,6 +1,6 @@
 import User from '../models/userModel.js';
 
-const changeUserEmail = async (req, res) => {
+const updateUserEmail = async (req, res) => {
     const { uid, email } = req.body;
 
     const user = await User.findOne({ uid });
@@ -35,4 +35,4 @@ const changeUserEmail = async (req, res) => {
     }
 };
 
-export { changeUserEmail };
+export { updateUserEmail };
