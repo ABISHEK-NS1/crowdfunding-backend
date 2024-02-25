@@ -7,7 +7,10 @@ import {
     getUserFundraiserById,
     getUserFundraisers,
 } from '../controllers/fundraiserController.js';
-import { updateUserEmail } from '../controllers/userController.js';
+import {
+    updateUserEmail,
+    updateUserFullName,
+} from '../controllers/userController.js';
 import { authenticate } from '../middlewares/authenticate.js';
 
 const userRouter = express.Router();
@@ -41,6 +44,11 @@ userRouter.post(
     '/api/user/changeUserEmail',
     authenticate,
     updateUserEmail
+);
+userRouter.post(
+    '/api/user/changeUserFullName',
+    authenticate,
+    updateUserFullName
 );
 
 export default userRouter;

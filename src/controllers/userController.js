@@ -1,3 +1,5 @@
+import { FundraiserDonations } from '../models/fundraiserDonationsModal.js';
+import Fundraiser from '../models/fundraiserModel.js';
 import User from '../models/userModel.js';
 
 const updateUserEmail = async (req, res) => {
@@ -15,10 +17,8 @@ const updateUserEmail = async (req, res) => {
                 statusCode: 200,
                 message: 'User email updated!',
                 userDetails: {
-                    fullname: user.fullname,
                     email: user.email,
                     emailVerified: user.emailVerified,
-                    profilePicUrl: user.profilePicUrl,
                 },
             });
         } else {
@@ -35,4 +35,40 @@ const updateUserEmail = async (req, res) => {
     }
 };
 
-export { updateUserEmail };
+const updateUserFullName = async (req, res) => {
+    const { uid, fullname } = req.body;
+
+    const user = await User.findOne({ uid });
+
+    if (user) {
+        await Fundraiser.updateMany(
+            { uid },
+            { creatorName: fullname }
+        );
+        await FundraiserDonations.updateMany(
+            { uid },
+            { fullname }
+        );
+        user.fullname = fullname;
+        const updated = await user.save();
+
+        if (updated) {
+            return res.json({
+                statusCode: 200,
+                message: 'User fullname updated!',
+            });
+        } else {
+            return res.json({
+                statusCode: 400,
+                message: 'Problem updating fullname',
+            });
+        }
+    } else {
+        return res.json({
+            statusCode: 400,
+            message: 'User not found!',
+        });
+    }
+};
+
+export { updateUserEmail, updateUserFullName };
