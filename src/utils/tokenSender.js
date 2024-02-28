@@ -39,19 +39,9 @@ const sendVerificationMail = async (sendTo, uid) => {
     });
 
     if (!verificationData) {
-        const mailSent = await new Promise((resolve, reject) => {
-            transporter.sendMail(
-                mailConfigurations,
-                function (error, info) {
-                    if (error) {
-                        console.log(error);
-                        reject(error);
-                    } else {
-                        resolve(info);
-                    }
-                }
-            );
-        });
+        const mailSent = await transporter.sendMail(
+            mailConfigurations
+        );
 
         if (mailSent) {
             await UserVerification.create({
