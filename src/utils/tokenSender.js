@@ -13,8 +13,8 @@ const sendVerificationMail = async (sendTo, uid) => {
         port: 465,
         secure: true,
         auth: {
-            user: process.env.OFFICIAL_MAIL,
-            pass: process.env.OFFICIAL_MAIL_PASSWORD,
+            user: process.env.OFFICIAL_GMAIL,
+            pass: process.env.OFFICIAL_GMAIL_PASSWORD,
         },
     });
 
@@ -27,7 +27,7 @@ const sendVerificationMail = async (sendTo, uid) => {
     );
 
     const mailConfigurations = {
-        from: process.env.OFFICIAL_MAIL,
+        from: process.env.OFFICIAL_GMAIL,
         to: sendTo,
         subject: 'Email Verification',
         html: `Hi! There, You have recently created an account or asked for verification mail on our website.<br/><br/>Please follow the given link to verify your email<br/><br/><a href="${baseurl}/user/verify?token=${token}" target="_blank">Verify Email</a><br/><br/>The link will expire in 30 minutes<br/><br/>Thank You!`,
