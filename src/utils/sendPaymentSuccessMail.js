@@ -10,13 +10,14 @@ const sendPaymentSuccessMail = async (
     amount
 ) => {
     const transporter = nodemailer.createTransport({
-        service: 'gmail',
+        host: 'smtp.gmail.com',
         port: 465,
         secure: true,
         auth: {
             user: process.env.OFFICIAL_GMAIL,
             pass: process.env.OFFICIAL_GMAIL_PASSWORD,
         },
+        service: 'gmail',
     });
 
     const mailConfigurations = {
