@@ -73,6 +73,31 @@ const updateUserFullName = async (req, res) => {
     }
 };
 
+const getUserOtherDetails = async (req, res) => {
+    const { uid } = req.body;
+
+    const user = await User.findOne({
+        uid,
+    });
+
+    if (user) {
+        const otherDetails = await OtherUserDetails.findOne({
+            uid,
+        });
+
+        return res.json({
+            statusCode: 200,
+            message: 'Found other details',
+            otherDetails,
+        });
+    } else {
+        return res.json({
+            statusCode: 400,
+            message: 'No user found!',
+        });
+    }
+};
+
 const saveUserOtherDetails = async (req, res) => {
     const { values, uid } = req.body;
 
@@ -87,7 +112,7 @@ const saveUserOtherDetails = async (req, res) => {
             age: getAge(new Date(values.dateOfBirth)),
             dob: values.dateOfBirth,
             govtIDType: values.govtIdType,
-            govtIDNumber: values.govtIDNumber,
+            govtIDNumber: values.govtIdNumber,
             accountHolderName: values.accountHolderName,
             accountNumber: values.accountNumber,
             ifscCode: values.ifscCode,
@@ -117,6 +142,7 @@ const saveUserOtherDetails = async (req, res) => {
 };
 
 export {
+    getUserOtherDetails,
     saveUserOtherDetails,
     updateUserEmail,
     updateUserFullName,
