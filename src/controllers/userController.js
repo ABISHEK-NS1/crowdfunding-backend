@@ -73,7 +73,7 @@ const updateUserFullName = async (req, res) => {
     }
 };
 
-const saveOtherUserDetails = async (req, res) => {
+const saveUserOtherDetails = async (req, res) => {
     const { values, uid } = req.body;
 
     const user = await User.findOne({
@@ -117,7 +117,7 @@ const saveOtherUserDetails = async (req, res) => {
 };
 
 export {
-    saveOtherUserDetails,
+    saveUserOtherDetails,
     updateUserEmail,
     updateUserFullName,
 };

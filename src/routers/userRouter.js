@@ -8,7 +8,7 @@ import {
     getUserFundraisers,
 } from '../controllers/fundraiserController.js';
 import {
-    saveOtherUserDetails,
+    saveUserOtherDetails,
     updateUserEmail,
     updateUserFullName,
 } from '../controllers/userController.js';
@@ -54,7 +54,7 @@ userRouter.post(
 userRouter.post(
     '/api/user/saveOtherUserDetails',
     authenticate,
-    saveOtherUserDetails
+    saveUserOtherDetails
 );
 
 export default userRouter;
