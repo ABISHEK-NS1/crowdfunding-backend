@@ -4,6 +4,7 @@ const OtherUserDetailsSchema = new mongoose.Schema(
     {
         uid: String,
         gender: String,
+        age: String,
         dob: String,
         govtIDType: String,
         govtIDNumber: String,

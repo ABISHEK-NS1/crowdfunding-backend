@@ -8,6 +8,7 @@ import {
     getUserFundraisers,
 } from '../controllers/fundraiserController.js';
 import {
+    saveOtherUserDetails,
     updateUserEmail,
     updateUserFullName,
 } from '../controllers/userController.js';
@@ -49,6 +50,11 @@ userRouter.post(
     '/api/user/changeUserFullName',
     authenticate,
     updateUserFullName
+);
+userRouter.post(
+    '/api/user/saveOtherUserDetails',
+    authenticate,
+    saveOtherUserDetails
 );
 
 export default userRouter;

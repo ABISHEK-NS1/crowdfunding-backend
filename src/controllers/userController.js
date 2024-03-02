@@ -1,6 +1,8 @@
 import { FundraiserDonations } from '../models/fundraiserDonationsModal.js';
 import Fundraiser from '../models/fundraiserModel.js';
+import { OtherUserDetails } from '../models/otherUserDetailsModal.js';
 import User from '../models/userModel.js';
+import { getAge } from '../utils/lib.js';
 
 const updateUserEmail = async (req, res) => {
     const { uid, email } = req.body;
@@ -71,4 +73,51 @@ const updateUserFullName = async (req, res) => {
     }
 };
 
-export { updateUserEmail, updateUserFullName };
+const saveOtherUserDetails = async (req, res) => {
+    const { values, uid } = req.body;
+
+    const user = await User.findOne({
+        uid,
+    });
+
+    if (user) {
+        const saveDetails = await OtherUserDetails.create({
+            uid,
+            gender: values.gender,
+            age: getAge(new Date(values.dateOfBirth)),
+            dob: values.dateOfBirth,
+            govtIDType: values.govtIdType,
+            govtIDNumber: values.govtIDNumber,
+            accountHolderName: values.accountHolderName,
+            accountNumber: values.accountNumber,
+            ifscCode: values.ifscCode,
+            bankName: values.bankName,
+            accountType: values.accountType,
+            status: 'review',
+        });
+
+        if (saveDetails) {
+            return res.json({
+                statusCode: 200,
+                message: 'Details saved and under review!',
+                details: saveDetails,
+            });
+        } else {
+            return res.json({
+                statusCode: 400,
+                message: 'Problem saving details',
+            });
+        }
+    } else {
+        return res.json({
+            statusCode: 400,
+            message: 'User not found!',
+        });
+    }
+};
+
+export {
+    saveOtherUserDetails,
+    updateUserEmail,
+    updateUserFullName,
+};
