@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 
+import { FundraiserFunds } from '../models/fundraiserFunds.js';
 import Fundraiser from '../models/fundraiserModel.js';
 import { FundraiserUpdates } from '../models/fundraiserUpdatesModal.js';
 import User from '../models/userModel.js';
@@ -520,6 +521,50 @@ const deleteFundraiserUpdate = async (req, res) => {
     }
 };
 
+const getFundraiserFunds = async (req, res) => {
+    const { uid, fundraiserId } = req.body;
+
+    const user = User.findOne({
+        uid,
+    });
+
+    if (user) {
+        const fundraiser =
+            await Fundraiser.findById(fundraiserId);
+
+        if (fundraiser.status === 'active') {
+            const fundraiserFunds =
+                await FundraiserFunds.findOne({
+                    uid,
+                    fundraiserId,
+                });
+
+            if (fundraiserFunds) {
+                return res.json({
+                    statusCode: 200,
+                    message: 'Funds found!',
+                    fundraiserFunds,
+                });
+            } else {
+                return res.json({
+                    statusCode: 404,
+                    message: 'Funds not found!',
+                });
+            }
+        } else {
+            return res.json({
+                statusCode: 400,
+                message: 'Fundraiser is not active!',
+            });
+        }
+    } else {
+        return res.json({
+            statusCode: 400,
+            message: 'User not found!',
+        });
+    }
+};
+
 export {
     deleteFundraiser,
     deleteFundraiserDraft,
@@ -527,6 +572,7 @@ export {
     getAllFundraisers,
     getDraftFundraiser,
     getFundraiserById,
+    getFundraiserFunds,
     getFundraiserUpdates,
     getUserFundraiserById,
     getUserFundraisers,

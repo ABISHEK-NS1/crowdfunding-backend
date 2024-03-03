@@ -4,6 +4,7 @@ import {
     deleteFundraiserUpdate,
     getAllFundraisers,
     getFundraiserById,
+    getFundraiserFunds,
     getFundraiserUpdates,
     postFundraiserUpdate,
     saveFundraiser,
@@ -44,6 +45,11 @@ fundraiserRouter.post(
 fundraiserRouter.post(
     '/api/fundraiser/getFundraiserById',
     getFundraiserById
+);
+fundraiserRouter.post(
+    '/api/fundraiser/getFundraiserFunds',
+    authenticate,
+    getFundraiserFunds
 );
 
 export default fundraiserRouter;
