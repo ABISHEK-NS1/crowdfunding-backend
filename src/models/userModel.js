@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 var UserSchema = new mongoose.Schema(
     {
         uid: String,
-        fullname: String,
+        fullname: { type: String, minLength: 3 },
         email: String,
         emailVerified: { type: Boolean, default: false },
         profilePicUrl: {

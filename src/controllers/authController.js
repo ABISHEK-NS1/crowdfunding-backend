@@ -34,6 +34,12 @@ const signIn = async (req, res) => {
 const signUp = async (req, res) => {
     const { uid, fullname, email } = req.body;
 
+    if (!(fullname.length >= 3)) {
+        return res.json({
+            statusCode: 400,
+            message: 'Fullname must be greater than 3',
+        });
+    }
     const user = await User.create({
         uid,
         fullname,
