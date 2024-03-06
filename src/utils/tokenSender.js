@@ -28,7 +28,10 @@ const sendVerificationMail = async (sendTo, uid) => {
     );
 
     const mailConfigurations = {
-        from: process.env.OFFICIAL_GMAIL,
+        from: {
+            name: 'sahyog',
+            address: process.env.OFFICIAL_GMAIL,
+        },
         to: sendTo,
         subject: 'Email Verification',
         html: `Hi! There, You have recently created an account or asked for verification mail on our website.<br/><br/>Please follow the given link to verify your email<br/><br/><a href="${baseurl}/user/verify?token=${token}" target="_blank">Verify Email</a><br/><br/>The link will expire in 30 minutes<br/><br/>Thank You!`,
