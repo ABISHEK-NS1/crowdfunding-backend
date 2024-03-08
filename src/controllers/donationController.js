@@ -30,7 +30,6 @@ const saveDonation = async (req, res) => {
         const fundraiser =
             await Fundraiser.findById(fundraiserId);
         const funds = await FundraiserFunds.findOne({
-            uid,
             fundraiserId,
         });
 
